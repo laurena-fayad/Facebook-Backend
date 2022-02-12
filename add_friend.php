@@ -29,8 +29,31 @@ function sendRequest ($user1_id, $user2_id) {
         return = false;
     }
 
-$json_response = json_encode($array_response);
-echo $json_response;
+    $json_response = json_encode($array_response);
+    echo $json_response;
+}
+
+function acceptRequest ($user1_id, $user2_id) {
+    //UPGRADE STATUS TO FRIENDS
+    $query = $mysqli->prepare(
+        "UPDATE relationship SET status='friend' 
+        WHERE (status='pending' AND 
+        ((user1_id =? AND user2_id =?) OR (user1_id =? AND user2_id =?)))");
+
+    $query->bind_param("iiii", $user1_id, $user2_id, $user2_id, $user1_id);
+    $query->execute();
+    $query->store_result();
+    $num_rows = $query->num_rows;
+    $query->fetch();
+
+    $array_response = [];
+    if($num_rows == 0){
+        $array_response["error"] = "Invalid friend request";
+        return = false;
+    }
+}
+
+
 
 $query->close();
 $mysqli->close();
