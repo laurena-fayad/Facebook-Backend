@@ -46,7 +46,18 @@ function acceptRequest ($user1_id, $user2_id) {
     $query->store_result();
 }
 
-//REMOVE FRIEND
+// IGNORE FRIEND REQUEST - REMOVE PENDING ENTRY
+  function ignoreRequest ($user1_id, $user2_id) {
+    $query = $mysqli->prepare(
+        "DELETE FROM relationship 
+        WHERE (status='pending' AND 
+        ((user1_id =? AND user2_id =?) OR (user1_id =? AND user2_id =?)))");
+
+    $query->bind_param("iiii", $user1_id, $user2_id, $user2_id, $user1_id);
+    $query->execute();
+}
+
+//REMOVE FRIEND - DELETE RELATIONSHIP ENTRY
 function removeFriend ($user1_id, $user2_id) {
     $query = $mysqli->prepare(
         "DELETE FROM relationship 
@@ -57,7 +68,7 @@ function removeFriend ($user1_id, $user2_id) {
     $query->execute();
 }
 
-// BLOCK & UNBLOCK
+// BLOCK - ADD RELATIONSHIP ENTRY AS BLOCKED
 function block ($user1_id, $user2_id) {
     $query = $mysqli->prepare("INSERT INTO relationship (user1_id, user2_id, status) VALUES (?,?,'blocked')");
 
@@ -65,6 +76,7 @@ function block ($user1_id, $user2_id) {
     $query->execute();
 }
 
+// UNBLOCK - DELETE BLOCKED RELATIONSHIP ENTRY
 function unblock ($user1_id, $user2_id) {
     $query = $mysqli->prepare(
         "DELETE FROM relationship 
