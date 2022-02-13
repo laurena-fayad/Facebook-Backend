@@ -1,3 +1,4 @@
+
 <?php
 
 include("db_info.php");
@@ -17,3 +18,4 @@ include("db_info.php");
     $mysqli->close();
 }
 ?>
+

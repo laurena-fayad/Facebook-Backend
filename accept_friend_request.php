@@ -1,3 +1,4 @@
+
 <?php
 
 include("db_info.php");
@@ -17,4 +18,5 @@ function acceptRequest ($user1_id, $user2_id) {
     $query->close();
     $mysqli->close();
 }
+
 ?>
