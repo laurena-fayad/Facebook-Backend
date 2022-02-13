@@ -30,12 +30,15 @@ $array_response = [];
 if($num_rows == 0){
     $array_response["status"] = "User not found!";
 }else{
+    include ("jwt.php");
     $array_response["status"] = "Logged In !";
-    $array_response["user_id"] = $id;
+    
+    $token=createJwt($id);
+    $array_response["token"] = $token;
 }
  
-$json_response = json_encode($array_response);
-echo $json_response;
+
+
 
 $query->close();
 $mysqli->close();
