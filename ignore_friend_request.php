@@ -5,8 +5,8 @@ header("Access-Control-Allow-Origin: *");
 include("db_info.php");
 
 //GET $user id values
-$user1_id =  $_GET[$user1_id];
-$user2_id = $_GET[$user2_id];
+$user1_id =  $_GET["user1"];
+$user2_id = $_GET["user2"];
 
 // CHECK IF ALREADY PENDING FRIENDS
 $query = $mysqli->prepare("SELECT status FROM relationship WHERE ((user1_id = ? AND user2_id = ? AND status = 'pending') OR (user1_id = ? AND user2_id = ? AND status = 'pending'))");
@@ -34,6 +34,7 @@ if($num_rows == 0){
 
   $array_response["status"] = "Friend request ignored successfully.";
   $json_response = json_encode($array_response);
+  echo $json_response;
 }
 
 $query->close();
