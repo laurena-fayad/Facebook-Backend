@@ -1,7 +1,9 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 
 include("db_info.php");
+include ("jwt.php");
 
 if(isset($_POST["email"])){
     $email = $mysqli->real_escape_string($_POST["email"]);
@@ -31,12 +33,12 @@ $array_response = [];
 if($num_rows == 0){
     $array_response["status"] = "User not found!";
 }else{
-    include ("jwt.php");
     $array_response["status"] = "Logged In !";
     
     $token=createJwt($id);
     $array_response["token"] = $token;
 }
+echo json_encode($array_response);
  
 
 
