@@ -40,5 +40,20 @@ header("Access-Control-Allow-Headers: *");
         $array_response["date"] = $date;
         echo json_encode($array_response);
     }
-  
+    
+// DELETE A POST
+    function f_delete($token, $id) {
+        include ("db_info.php");
+        $tokenParts = explode('.', $token);
+        $payload = base64_decode($tokenParts[1]);
+        $data = json_decode($payload, true);
+        
+        $query = $mysqli->prepare("DELETE FROM user_post where id=?");
+        $query->bind_param("i", $id);
+        $query->execute();
+        $array_response["status"] = "You've just deleted post!";
+        echo json_encode($array_response);
+    }
+
+
 ?>
