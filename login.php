@@ -4,30 +4,34 @@ header("Access-Control-Allow-Origin: *");
 include("db_info.php");
 include ("jwt.php");
 
+$array_response = [];
+
 if(isset($_POST["email"])){
     $email = $mysqli->real_escape_string($_POST["email"]);
 }else{
-    
-    die("Please enter an email");
+    $array_response["status"] = "Please enter an email.";
+    echo json_encode($array_response);
+    return false;
 }
 
 if(isset($_POST["password"])){
     $password = $mysqli->real_escape_string($_POST["password"]);
     $password = hash("sha256", $password);
 }else{
-    die("Please enter a password");
+    $array_response["status"] = "Please enter a password.";
+    echo json_encode($array_response);
+    return false;
 }
 
-$query = $mysqli->prepare("SELECT id FROM user_account WHERE email = ? AND password = ?");
+$query = $mysqli->prepare("SELECT id, fname, lname FROM user_account WHERE email = ? AND password = ?");
 $query->bind_param("ss", $email, $password);
 $query->execute();
 
 $query->store_result();
 $num_rows = $query->num_rows;
-$query->bind_result($id);
+$query->bind_result($id, $fname, $lname);
 $query->fetch();
 
-$array_response = [];
 
 if($num_rows == 0){
     $array_response["status"] = "User not found!";
@@ -36,11 +40,10 @@ if($num_rows == 0){
     
     $token=createJwt($id);
     $array_response["token"] = $token;
+    $array_response["fname"] = $fname;
+    $array_response["lname"] = $lname;
 }
 echo json_encode($array_response);
- 
-
-
 
 $query->close();
 $mysqli->close();
