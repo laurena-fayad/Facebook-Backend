@@ -55,5 +55,28 @@ header("Access-Control-Allow-Headers: *");
         echo json_encode($array_response);
     }
 
+// GET ALL POSTS
+    function get_Allposts($token){
+        include ("db_info.php");
+        $tokenParts = explode('.', $token);
+        $payload = base64_decode($tokenParts[1]);
+        $data = json_decode($payload, true);
+        $user_id= $data["id"]; 
+        $query = $mysqli->prepare("SELECT post_text, id FROM  user_post where account_id=?");
+        $query->bind_param("i", $user_id);
+        $query->execute();
+        $array=$query->get_result();
+        $array_response=[];
+        while($row=$array->fetch_assoc()){
+            $array_response[]=$row;
+        }
+        echo json_encode($array_response);
+        // echo json_encode(array("post"=>$array_response));
+
+    }
+
+    
+
+
 
 ?>
