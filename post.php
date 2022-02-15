@@ -62,7 +62,11 @@ header("Access-Control-Allow-Headers: *");
         $payload = base64_decode($tokenParts[1]);
         $data = json_decode($payload, true);
         $user_id= $data["id"]; 
-        $query = $mysqli->prepare("SELECT post_text, id FROM  user_post where account_id=?");
+        $query = $mysqli->prepare(
+            "SELECT user_post.id as post_id, user_post.post_text, user_account.fname, user_account.lname , user_account.id
+            FROM  user_post
+            JOIN user_account on user_post.account_id = user_account.id
+            where user_post.account_id=?;");
         $query->bind_param("i", $user_id);
         $query->execute();
         $array=$query->get_result();
@@ -71,11 +75,8 @@ header("Access-Control-Allow-Headers: *");
             $array_response[]=$row;
         }
         echo json_encode($array_response);
-        // echo json_encode(array("post"=>$array_response));
-
     }
 
-    
 // JWT VALIDATION
     include("validate.php");
 
