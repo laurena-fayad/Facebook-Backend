@@ -1,6 +1,5 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
 
 include("db_info.php");
 include ("jwt.php");
