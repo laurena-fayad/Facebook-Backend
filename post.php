@@ -63,10 +63,11 @@ header("Access-Control-Allow-Headers: *");
         $data = json_decode($payload, true);
         $user_id= $data["id"]; 
         $query = $mysqli->prepare(
-            "SELECT user_post.id as post_id, user_post.post_text, user_account.fname, user_account.lname , user_account.id
+            "SELECT user_post.id as post_id, user_post.post_text, user_post.post_date, user_account.fname, user_account.lname , user_account.id
             FROM  user_post
             JOIN user_account on user_post.account_id = user_account.id
-            where user_post.account_id=?;");
+            where user_post.account_id=?
+            Order By user_post.post_date;");
         $query->bind_param("i", $user_id);
         $query->execute();
         $array=$query->get_result();
