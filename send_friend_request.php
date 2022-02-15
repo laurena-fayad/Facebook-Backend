@@ -4,8 +4,8 @@ header("Access-Control-Allow-Origin: *");
 include("db_info.php");
 
 //GET $user id values
-$user1_id =  $_GET[$user1_id];
-$user2_id = $_GET[$user2_id];
+$user1_id =  $_GET["user1"];
+$user2_id = $_GET["user2"];
 
 // SEND FRIEND REQUEST - CHANGE STATUS TO PENDING
 
@@ -27,15 +27,15 @@ if($num_rows == 0){
     $query->execute();
     $array_response["status"] = "Friend request sent successfully.";
     $json_response = json_encode($array_response);
-
+    echo $json_response;
 }elseif($status == 'friend'){
     $array_response["error"] = "Users are already friends.";
     $json_response = json_encode($array_response);
-    return false;
+    echo $json_response;
 }elseif($status == 'pending'){
     $array_response["error"] = "There's already a pending friend request.";
     $json_response = json_encode($array_response);
-    return false;
+    echo $json_response;
 }
 
 $query->close();
