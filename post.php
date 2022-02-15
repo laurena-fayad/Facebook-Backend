@@ -54,7 +54,7 @@ header("Access-Control-Allow-Headers: *");
         $array_response["status"] = "You've just deleted post!";
         echo json_encode($array_response);
     }
-
+    
 // GET ALL POSTS
     function get_Allposts($token){
         include ("db_info.php");
@@ -76,6 +76,42 @@ header("Access-Control-Allow-Headers: *");
     }
 
     
+// JWT VALIDATION
+    include("validate.php");
+
+    if(isset($_POST["token"]) ){
+        
+         $token = $_POST["token"];
+    
+         $validate= is_jwt_valid($_POST["token"] ,$secret = 'secret');
+        
+         if ($validate){ 
+
+            if ($_POST['function'] == 'POST'){
+                  f_post($token);
+                  
+            }else if ($_POST['function'] == 'PUT' && isset($_POST["post_id"])) {
+                 $post_id=$_POST["post_id"];
+                  f_put($token,$post_id);
+                 
+            }else if($_POST['function'] == 'DELETE'){
+                $post_id=$_POST["post_id"];
+                  f_delete($token, $post_id) ;            
+            }else if($_POST['function']=='GET'){
+                get_Allposts($token);
+            }
+                else {
+                echo ("Send function method or correct post_id");
+            }
+            
+            
+            
+        } else {
+            echo ("Token not valid");
+        }
+    }else{
+        die ("Please Send token");
+       };
 
 
 
