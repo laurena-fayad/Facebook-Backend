@@ -33,9 +33,24 @@ if(isset($_POST["token"]) ){
             $array_response["status"] = "Success.";
             $json_response = json_encode($array_response);
             echo $json_response;
+        }else{
+            $array_response["error"] = "Missing friendID";
+            $json_response = json_encode($array_response);
+            echo $json_response;
+            return false;
         }
+    }else{
+        $array_response["error"] = "Invalid token.";
+        $json_response = json_encode($array_response);
+        echo $json_response;
+        return false;
     }
-}
+}else{
+    $array_response["error"] = "Token not received.";
+    $json_response = json_encode($array_response);
+    echo $json_response;
+    return false;
+};
 
 $query->close();
 $mysqli->close();
