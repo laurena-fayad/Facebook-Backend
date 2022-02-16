@@ -25,9 +25,12 @@ if(isset($_POST["token"]) ){
             $user2_id = $_POST["friendID"];
 
             // BLOCK - ADD RELATIONSHIP ENTRY AS BLOCKED
-            $query = $mysqli->prepare("INSERT INTO relationship (user1_id, user2_id, status) VALUES (?,?,'blocked')");
+            $query = $mysqli->prepare(
+                "UPDATE relationship SET STATUS = 'blocked' 
+                where( (user1_id = ? AND user2_id = ?) OR 
+                (user1_id = ? AND user2_id = ?));");
 
-            $query->bind_param("ii", $user1_id, $user2_id);
+            $query->bind_param("iiii", $user1_id, $user2_id, $user2_id, $user1_id);
             $query->execute();
 
             $array_response["status"] = "Success.";

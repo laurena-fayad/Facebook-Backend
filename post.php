@@ -45,6 +45,7 @@ function f_post($token) {
 // DELETE A POST
 function f_delete($token, $post_id) {
     include ("db_info.php");
+
     $tokenParts = explode('.', $token);
     $payload = base64_decode($tokenParts[1]);
     $data = json_decode($payload, true);
@@ -72,20 +73,22 @@ function get_Allposts($token){
             OR user_account.id IN(
             SELECT relationship.user1_id
             FROM relationship
-            WHERE relationship.user2_id = ?) 
+            WHERE relationship.user2_id = ? AND relationship.status = 'friend') 
             OR user_account.id IN(
             SELECT relationship.user2_id
             FROM relationship
-            WHERE relationship.user1_id = ?))
+            WHERE relationship.user1_id = ? AND relationship.status = 'friend'))
             Order By user_post.post_date;");
     $query->bind_param("iii", $user_id, $user_id, $user_id);
+
     $query->execute();
     $array=$query->get_result();
     $array_response=[];
     while($row=$array->fetch_assoc()){
         $array_response[]=$row;
     }
-    echo json_encode($array_response);
+    $json_response = json_encode($array_response);
+    echo $json_response;
 }
 
 // JWT VALIDATION

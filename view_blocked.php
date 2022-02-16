@@ -33,11 +33,15 @@ if(isset($_POST["token"]) ){
 
         $array = $query->get_result();
 
-        while($blocked = $array->fetch_assoc()){
-            $array_response[] = $blocked;
-            $json_response = json_encode($array_response);
+        $num_rows = $query->num_rows;
+        if($num_rows != 0){
+            while($blocked = $array->fetch_assoc()){
+                $array_response[] = $blocked;
+                $json_response = json_encode($array_response);
+            }
+            echo $json_response;
         }
-        echo $json_response;
+
     }else{
         $array_response["error"] = "Invalid token.";
         $json_response = json_encode($array_response);

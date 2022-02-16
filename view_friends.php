@@ -27,7 +27,8 @@ if(isset($_POST["token"]) ){
             "SELECT DISTINCT user_account.id, user_account.fname, user_account.lname
             FROM user_account
             INNER JOIN relationship AS relationship1 ON user_account.id = relationship1.user1_id OR user_account.id = relationship1.user2_id
-            INNER JOIN relationship AS relationship2 ON user_account.id = relationship2.user2_id OR user_account.id = relationship2.user1_id            WHERE (user_account.id IN (SELECT relationship.user1_id
+            INNER JOIN relationship AS relationship2 ON user_account.id = relationship2.user2_id OR user_account.id = relationship2.user1_id            
+            WHERE (user_account.id IN (SELECT relationship.user1_id
                                         FROM relationship
                                         WHERE (relationship.user2_id = ? AND relationship.status = 'friend')) 
                 OR user_account.id IN (SELECT relationship.user2_id
