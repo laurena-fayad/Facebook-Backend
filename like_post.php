@@ -37,40 +37,15 @@ if(isset($_POST["token"]) ){
                 $query1->bind_param("ii", $post_id, $user_id);
                 $query1->execute();
 
-                $query2 = $mysqli->prepare("SELECT COUNT(account_id) FROM post_like WHERE post_id = ? GROUP BY post_id;");
-                $query2->bind_param("i", $post_id);
-                $query2->execute();
-
-                $num_rows2 = $query2->num_rows;
-                $query2->bind_result($likes);
-                $query2->fetch();
-
-                if($num_rows2 == 0){
-                    $array_response["status"] = "Post unliked";
-                    $array_response["likes"] = 0;
-                     $json_response = json_encode($array_response);
-                    echo $json_response;
-                }else{
-                    $array_response["status"] = "Post unliked";
-                    $array_response["likes"] = $likes;
-                    $json_response = json_encode($array_response);
-                    echo $json_response;
-                }
+                $array_response["status"] = "Post unliked";
+                $json_response = json_encode($array_response);
+                echo $json_response;
             }else{
                 $query1 = $mysqli->prepare("INSERT INTO post_like (post_id, account_id) VALUES (?,?)");
                 $query1->bind_param("ii", $post_id, $user_id);
                 $query1->execute();
 
-                $query2 = $mysqli->prepare("SELECT COUNT(account_id) FROM post_like WHERE post_id = ? GROUP BY post_id;");
-                $query2->bind_param("i", $post_id);
-                $query2->execute();
-
-                $num_rows2 = $query2->num_rows;
-                $query2->bind_result($likes);
-                $query2->fetch();
-
                 $array_response["status"] = "Post liked";
-                $array_response["likes"] = $likes;
                 $json_response = json_encode($array_response);
                 echo $json_response;
             }

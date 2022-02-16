@@ -115,8 +115,6 @@ header("Access-Control-Allow-Headers: *");
                 echo ("Send function method or correct post_id");
             }
             
-            
-            
         } else {
             echo ("Token not valid");
         }
