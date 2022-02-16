@@ -40,7 +40,7 @@ if(isset($_POST["token"]) ){
         }else{
           // UNBLOCK - DELETE BLOCKED RELATIONSHIP ENTRY
           $query = $mysqli->prepare(
-              "DELETE FROM relationship 
+              "UPDATE relationship SET status = 'friend'
               WHERE (user1_id =? AND user2_id =? AND status='blocked');");
 
           $query->bind_param("ii", $user1_id, $user2_id);
