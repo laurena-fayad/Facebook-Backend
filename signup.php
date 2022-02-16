@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Headers *");
 include("db_info.php");
 
 
@@ -37,7 +37,7 @@ if(isset($_POST["email"])){
     }
     
 }else{
-    $array_response["status"] = "PLEASE ENTER EMAIL ";
+    $array_response["status"] = "PLEASE ENTER AN EMAIL ";
         $json_response = json_encode($array_response);
         die($json_response);
 };   
