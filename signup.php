@@ -1,25 +1,26 @@
 <?php
-
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 include("db_info.php");
 
 
-if(isset($_POST["name"])){
+if(isset($_POST["name"]) && !empty($_POST["name"])){ 
     $name = $_POST["name"];
 }else{
-    die("Please enter a name");
+    
+    $array_response["status"] = "PLEASE ENTER NAME";
+    $json_response = json_encode($array_response);
+    die($json_response);
 };    
 
-if(isset($_POST["lastname"])){
+if(isset($_POST["lastname"])){ 
     $last_name = $_POST["lastname"];
 }else{
-    die("Please enter a last name");
+    $array_response["status"] = "PLEASE ENTER LAST NAME";
+        $json_response = json_encode($array_response);
+        echo($json_response);
 };    
 
-if(isset($_POST["birthdate"])){
-    $birth_date = $_POST["birthdate"];
-}else{
-    die("Please enter a birth date");
-};    
 
 if(isset($_POST["email"])){
     $email = $_POST["email"];
@@ -34,24 +35,29 @@ if(isset($_POST["email"])){
         $json_response = json_encode($array_response);
         die($json_response);
     }
+    
 }else{
-    die("Please enter an email");
+    $array_response["status"] = "PLEASE ENTER EMAIL ";
+        $json_response = json_encode($array_response);
+        die($json_response);
 };   
 
 if(isset($_POST["password"])){
     $password = $_POST["password"];
     $password = hash("sha256", $password);
 }else{
-    die("Please enter a password");
+    $array_response["status"] = "PLEASE ENTER PASSWORD";
+        $json_response = json_encode($array_response);
+        die($json_response);
 }; 
 
 
-$query = $mysqli->prepare("INSERT INTO user_account (fname, lname, bday, email, password) VALUES (?, ?, ?, ?, ?)"); 
-$query->bind_param("sssss", $name, $last_name, $birth_date, $email, $password);
+$query = $mysqli->prepare("INSERT INTO user_account (fname, lname, email, password) VALUES(?,?,?,?)"); 
+$query->bind_param("ssss", $name, $last_name,$email, $password);
 $query->execute();
 
 $array_response = [];
-$array_response["status"] = "Signed up successfully";
+$array_response["status"] = "SIGNED UP SUCCESSFULLY";
 $json_response = json_encode($array_response);
 echo $json_response;
 
