@@ -1,5 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin:*");
+header("Access-Control-Allow-Headers:*");
 
 include("db_info.php");
 include ("jwt.php");
@@ -10,8 +11,9 @@ if(isset($_POST["email"])){
     $email = $mysqli->real_escape_string($_POST["email"]);
 }else{
     $array_response["status"] = "Please enter an email.";
-    echo json_encode($array_response);
-    return false;
+    // echo json_encode($array_response);
+    $json_response= json_encode($array_response);
+    die($json_response);
 }
 
 if(isset($_POST["password"])){
@@ -19,8 +21,8 @@ if(isset($_POST["password"])){
     $password = hash("sha256", $password);
 }else{
     $array_response["status"] = "Please enter a password.";
-    echo json_encode($array_response);
-    return false;
+    $json_response= json_encode($array_response);
+    die($json_response);
 }
 
 $query = $mysqli->prepare("SELECT id, fname, lname FROM user_account WHERE email = ? AND password = ?");
