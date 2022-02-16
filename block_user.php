@@ -1,25 +1,41 @@
-
 <?php
 
 header("Access-Control-Allow-Origin: *");
-
+include("validate.php");
 include("db_info.php");
 
-//GET $user id values
-$user1_id =  $_GET[$user1_id];
-$user2_id = $_GET[$user2_id];
-
-// BLOCK - ADD RELATIONSHIP ENTRY AS BLOCKED
 $array_response = [];
-global $mysqli;
-$query = $mysqli->prepare("INSERT INTO relationship (user1_id, user2_id, status) VALUES (?,?,'blocked')");
 
-$query->bind_param("ii", $user1_id, $user2_id);
-$query->execute();
+// JWT VALIDATION
 
-$array_response["status"] = "Friend blocked successfully.";
-$json_response = json_encode($array_response);
+if(isset($_POST["token"]) ){
 
+    $token = $_POST["token"];
+
+    $validate= is_jwt_valid($_POST["token"] ,$secret = 'secret');
+
+    if ($validate){ 
+        $tokenParts = explode('.', $token);
+        $payload = base64_decode($tokenParts[1]);
+        $data = json_decode($payload, true);
+
+        $user1_id= $data["id"];
+
+        if(isset($_POST["friendID"])){
+            $user2_id = $_POST["friendID"];
+
+            // BLOCK - ADD RELATIONSHIP ENTRY AS BLOCKED
+            $query = $mysqli->prepare("INSERT INTO relationship (user1_id, user2_id, status) VALUES (?,?,'blocked')");
+
+            $query->bind_param("ii", $user1_id, $user2_id);
+            $query->execute();
+
+            $array_response["status"] = "Success.";
+            $json_response = json_encode($array_response);
+            echo $json_response;
+        }
+    }
+}
 
 $query->close();
 $mysqli->close();
