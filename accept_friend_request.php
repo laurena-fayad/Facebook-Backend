@@ -49,8 +49,8 @@ if(isset($_POST["token"]) ){
                 $query->bind_param("iiii", $user1_id, $user2_id, $user2_id, $user1_id);
                 $query->execute();
                 $query->store_result();
-
                 $array_response["status"] = "Success";
+
                 $json_response = json_encode($array_response);
                 echo $json_response;
             }else{

@@ -40,8 +40,8 @@ if(isset($_POST["token"]) ){
 
         while($friend = $array->fetch_assoc()){
             $array_response[] = $friend;
-            $json_response = json_encode($array_response);
         }
+        $json_response = json_encode($array_response);
         echo $json_response;
 
     }else{

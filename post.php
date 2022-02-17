@@ -45,7 +45,6 @@ function f_post($token) {
 // DELETE A POST
 function f_delete($token, $post_id) {
     include ("db_info.php");
-
     $tokenParts = explode('.', $token);
     $payload = base64_decode($tokenParts[1]);
     $data = json_decode($payload, true);
@@ -65,22 +64,21 @@ function get_Allposts($token){
     $data = json_decode($payload, true);
     $user_id= $data["id"]; 
     $query = $mysqli->prepare(
-        "SELECT DISTINCT  user_post.id as post_id, user_post.post_text, user_post.post_date, user_account.fname, user_account.lname , user_account.id
+        "SELECT DISTINCT user_post.id as post_id, user_post.post_text, user_post.post_date, user_account.fname, user_account.lname , user_account.id
         FROM  user_post
         JOIN user_account on user_post.account_id = user_account.id
-        JOIN relationship on relationship1.user1_id = user_account.id
-
-        WHERE (user_account.id = ?
-            OR user_account.id IN(
-            SELECT relationship.user1_id
-            FROM relationship
-            WHERE relationship.user2_id = ? AND relationship.status = 'friend') 
-            OR user_account.id IN(
-            SELECT relationship.user2_id
-            FROM relationship
-            WHERE relationship.user1_id = ? AND relationship.status = 'friend'))
-            Order By user_post.post_date;");
-    $query->bind_param("iii", $user_id, $user_id, $user_id);
+        JOIN relationship on relationship.user1_id = user_account.id
+            WHERE (user_account.id = ?
+                OR user_account.id IN(
+                SELECT relationship.user1_id
+                FROM relationship
+                WHERE relationship.user2_id = ?) 
+                OR user_account.id IN(
+                SELECT relationship.user2_id
+                FROM relationship
+                WHERE relationship.user1_id = ?))
+                Order By user_post.post_date;");
+        $query->bind_param("iii", $user_id, $user_id, $user_id);
 
     $query->execute();
     $array=$query->get_result();
@@ -95,7 +93,7 @@ function get_Allposts($token){
 // JWT VALIDATION
 
 if(isset($_POST["token"]) ){
-    
+
         $token = $_POST["token"];
 
         $validate= is_jwt_valid($_POST["token"] ,$secret = 'secret');
